@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gallery | IIT Palakkad Clubs</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="page-header" style="background:#004d40; color:white;">
+    <h1>Gallery</h1>
+    <a href="index.html" class="back-btn" style="color: white;">← Back to Home</a>
+  </header>
+
+  <main class="gallery-grid">
+    <img src="https://jtazbldrflccroyjskuy.supabase.co/storage/v1/object/public/gallery-images/basket_ball_1758563391571_1.jpg" alt="Event 1">
+    <img src="https://jtazbldrflccroyjskuy.supabase.co/storage/v1/object/public/gallery-images/volleyball_1758562938103_3.jpg" alt="Event 2">
+    <img src="https://jtazbldrflccroyjskuy.supabase.co/storage/v1/object/public/gallery-images/cricket_1758563280187_2.jpg" alt="Event 3">
+    <img src="https://jtazbldrflccroyjskuy.supabase.co/storage/v1/object/public/gallery-images/football_1758563074140_1.jpg" alt="Event 4">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGLfVf_So6ZjpMjdtpvkhOzXEHqSeZYee0-w&s" alt="Event 5">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjXzdkS35HQH5GsRtI1fwMW8iPE8lT4WRIbw&s" alt="Event 6">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLgcvF2imcnoZz_utvjik2EwkIEuSOxs_s3A&s" alt="Event 7">
+    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQUVYQjSo5BxFp0wLRf2ORtXolBz96hYzAqkQ&s" alt="Event 8">
+    <img src="https://iitpkd.ac.in/sites/default/files/styles/width_scale/public/2025-03/GC%202025.jpg?itok=3bin2y1f" alt="Event 9">
+  </main>
+  <!-- Lightbox (hidden by default) -->
+    <div id="lightbox">
+        <span class="close">&times;</span>
+        <img id="lightbox-img" src="" alt="">
+    </div>
+
+    <script>
+        const galleryImages = document.querySelectorAll('.gallery-grid img');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        const closeBtn = document.querySelector('#lightbox .close');
+
+        galleryImages.forEach(img => {
+            img.addEventListener('click', () => {
+            lightbox.style.display = 'flex';
+            lightboxImg.src = img.src;
+            });
+        });
+
+        closeBtn.addEventListener('click', () => {
+            lightbox.style.display = 'none';
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+            lightbox.style.display = 'none';
+            }
+        });
+    </script>
+
+</body>
+</html>
