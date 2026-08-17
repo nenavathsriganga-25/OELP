@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Clubs | IIT Palakkad</title>
+
+    <style>
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: #c7af6b;
+            color: white;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .navbar ul li a.active {
+            color: gold;
+        }
+
+        
+        .page-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(to right, #ff3a22, #c7af6b);
+            color: white;
+        }
+
+        .page-header .back-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 14px;
+            background: white;
+            color: #b30000;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+        
+        .club-section {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .club-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .club-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .club-card:hover {
+            transform: scale(1.03);
+        }
+
+        .club-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .club-card h3 {
+            margin: 10px 0;
+        }
+
+        .club-card p a {
+            color: #b30000;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .club-card p a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">IIT Palakkad Dashboard</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="newclubs.html" class="active">Clubs</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="images.html">Images</a></li>
+            <li><a href="calendar.html">Calendar</a></li>
+        </ul>
+    </nav>
+
+    <!-- Header -->
+    <header class="page-header sport-header">
+        <h1>Student Council</h1>
+        <p>A hub of student-driven creativity, innovation, and collaboration.</p>
+        <a href="newclubs.html" class="back-btn">← Back</a>
+    </header>
+ 
+
+    <section class="club-section">
+        <h2>Student Council</h2>
+       
+        <div class="club-grid">
+            <div class="club-card">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTBNsGArFDT42QWV--uxziviIP_w9Ggvc_FIQ&s" alt="Students Affairs">
+                <h3>Students Affairs Council</h3>
+                <p>Acts as a bridge between students and institute administration.</p>
+                <p><a href="https://iitpkd.ac.in/student-affairs-council" target="_blank">Website</a></p>
+                <p>✉️ <a href="mailto:sec_acad@smail.iitpkd.ac.in">sec_acad@smail.iitpkd.ac.in</a></p>
+            </div>
+
+            <div class="club-card">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTJHgjBLLukh_rTZQta95UmutNb60I5p8MUFA&s" alt="Fleet Street">
+                <h3>The Fleet Street (TFS)</h3>
+                <p>The official student newspaper and media body.</p>
+                <p><a href="https://iitpkd.ac.in/student-media-body" target="_blank">Website</a></p>
+                <p>✉️ <a href="mailto:tfs@iitpkd.ac.in">tfs@iitpkd.ac.in</a></p>
+            </div>
+
+            <div class="club-card">
+                <img src="https://media.licdn.com/dms/image/v2/D560BAQHUcchG7gv13Q/company-logo_200_200/B56ZeGjarTGoAI-/0/1750309125741/ecell_iitpkd_logo?e=2147483647&v=beta&t=uoSE_NOUnQ9ue7TSQs3y95AEqtJ9DcBDiDuI9bBHxuw" alt="E-Cell">
+                <h3>Entrepreneurship Cell (E-Cell)</h3>
+                <p>Promotes innovation and entrepreneurship among students.</p>
+                <p><a href="https://iitpkd.ac.in/career-development-cell" target="_blank">Website</a></p>
+                <p>✉️ <a href="mailto:surge@iitpkd.ac.in">surge@iitpkd.ac.in</a></p>
+            </div>
+
+            <div class="club-card">
+                <img src="https://iitpkd.ac.in/sites/default/files/styles/width_scale/public/2025-09/International%20students%20meet%202025.jpg?itok=QPq66Xl4" alt="IAR">
+                <h3>International and Alumni Relations (IAR)</h3>
+                <p>Handles global partnerships, events, and alumni relations.</p>
+                <p><a href="https://iitpkd.ac.in/people/iar" target="_blank">Website</a></p>
+                <p>✉️ <a href="mailto:fc_iar@iitpkd.ac.in">fc_iar@iitpkd.ac.in</a></p>
+            </div>
+
+            <div class="club-card">
+                <img src="https://iac.iitpkd.ac.in/_app/immutable/assets/image3.JprjfBaM.webp" alt="IAC">
+                <h3>Industry Academia Conclave (IAC)</h3>
+                <p>Bridges academic research with industry applications.</p>
+                <p><a href="https://iitpkd.ac.in/events/industry-academia-conclave-iac-70" target="_blank">Website</a></p>
+                <p>✉️ <a href="mailto:iac@iitpkd.ac.in">iac@iitpkd.ac.in</a></p>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

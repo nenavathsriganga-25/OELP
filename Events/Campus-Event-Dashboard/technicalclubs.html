@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Clubs | IIT Palakkad</title>
+
+    <style>
+        
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background: #c7af6b;
+            color: white;
+        }
+
+        .navbar ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        .navbar ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .navbar ul li a.active {
+            color: gold;
+        }
+
+        
+        .page-header {
+            text-align: center;
+            padding: 40px 20px;
+            background: linear-gradient(to right, #ff3a22, #c7af6b);
+            color: white;
+        }
+
+        .page-header .back-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 8px 14px;
+            background: white;
+            color: #b30000;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 6px;
+        }
+
+       
+        .club-section {
+            padding: 30px;
+            text-align: center;
+        }
+
+        .club-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .club-card {
+            background: #fff;
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.2s ease;
+        }
+
+        .club-card:hover {
+            transform: scale(1.03);
+        }
+
+        .club-card img {
+            width: 100%;
+            height: 150px;
+            object-fit: contain;
+            margin-bottom: 10px;
+        }
+
+        .club-card h3 {
+            margin: 10px 0;
+        }
+
+        .club-card p a {
+            color: #b30000;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .club-card p a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo">IIT Palakkad Dashboard</div>
+        <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="newclubs.html" class="active">Clubs</a></li>
+            <li><a href="events.html">Events</a></li>
+            <li><a href="images.html">Images</a></li>
+            <li><a href="calendar.html">Calendar</a></li>
+        </ul>
+    </nav>
+
+    <!-- Header -->
+    <header class="page-header sport-header">
+        <h1>Technical Clubs</h1>
+        <p>Turn your ideas into Technology</p>
+        <a href="newclubs.html" class="back-btn">← Back</a>
+    </header>
+
+
+
+
+    <section class="club-section">
+        <h2>Technical Clubs</h2>
+    
+        <div class="club-grid">
+        
+            <div class="club-card">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTkSWe7KhnsWMnOhhCXU5wSWc4qDalhWpwKPA&s" alt="YACC">
+                <h3>YACC</h3>
+                <p>Competitive programming & coding hub.</p>
+                <p>Insta Page: <a href="https://www.instagram.com/tech.iitpkd/" target="_blank">@tech.iitpkd</a></p>
+            </div>
+
+            <div class="club-card">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR6szGcmhM9GBFOho6CC9fCYSesYGuF9y2LEQ&s" alt="Robotics">
+                <h3>Robotics Club</h3>
+                <p>Innovation in robotics & AI.</p>
+                <p>Insta Page: <a href="https://www.instagram.com/trc.iitpkd/" target="_blank">@trc.iitpkd</a></p>
+            </div>
+
+            <div class="club-card">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTZDEjnU-4wjYbe2kOSgNpuJogvkf8_fuyU43R4NVVZMA&s" alt="Astronomy">
+                <h3>Astronomy Club</h3>
+                <p>Stargazing & space exploration talks.</p>
+                <p>Insta Page: <a href="https://www.instagram.com/stellar_society_iitpkd/" target="_blank">@stellar_society_iitpkd</a></p>
+            </div>
+
+            <div class="club-card">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSvK4VLsCrqfTSw_gyrkg4966QL5YyGeZ3Aaw&s" alt="DAC">
+                <h3>Data Analytics Club(DAC)</h3>
+                <p>Explore AI, ML, and data science through projects & workshops.</p>
+                <p>Insta Page: <a href="https://www.instagram.com/dac.iitpkd/" target="_blank">@dac.iitpkd</a></p>
+            </div>
+
+            <div class="club-card">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSd9qX1z73tBJ80wFRqbNs9kX9tRhyOpCnIIQ&s" alt="finance">
+                <h3>Finance Club</h3>
+                <p>Learn finance basics, stock markets, and money management.</p>
+                <p>Insta Page: <a href="https://www.instagram.com/finance.club.iitpkd/" target="_blank">@finance.club.iitpkd</a></p>
+            </div>
+
+            <div class="club-card">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQY9YPhMXwfF3WQFdppUhv10qC1AGMtyKNWAw&s" alt="ydyuthi">
+                <h3>Y-DYUTHI</h3>
+                <p>Official Electrical and Electronics Club for tech enthusiasts.</p>
+                <p>Insta Page: <a href="https://www.instagram.com/ydyuthi_iitpkd/" target="_blank">@ydyuthi_iitpkd</a></p>
+            </div>
+
+            <div class="club-card">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRzIrJv25Oq0-ZnUWj0wofuYlcH2BKE4UsrdA&s" alt="qriosity">
+                <h3>Qriosity</h3>
+                <p>Quiz club of IIT PKD</p>
+                <p>Insta Page: <a href="https://www.instagram.com/quizclub_iitpkd/" target="_blank">@quizclub_iitpkd</a></p>
+            </div>
+        </div>
+    </section>
+
+</body>
+</html>

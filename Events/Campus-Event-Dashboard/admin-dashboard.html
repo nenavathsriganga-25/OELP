@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | IIT Palakkad</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { background: #f4f6f8; font-family: 'Poppins', sans-serif; }
+    .dashboard-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+    .header-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .header-box h1 { font-size: 2rem; color: #333; }
+    
+    .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 2px solid #ddd; padding-bottom: 10px; }
+    .tab-btn { background: none; border: none; font-size: 1.1rem; font-family: 'Poppins'; font-weight: 500; color: #666; cursor: pointer; padding: 10px 20px; border-radius: 8px; transition: 0.3s; }
+    .tab-btn.active { background: #fff; color: #a4893d; box-shadow: 0 2px 10px rgba(0,0,0,0.05); font-weight: 600; }
+    
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    .list-container { background: #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; }
+    .list-item { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee; }
+    .list-item:last-child { border-bottom: none; }
+    .info h3 { margin: 0 0 5px 0; color: #222; }
+    .meta { font-size: 0.85rem; color: #666; display: flex; gap: 15px; }
+    
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+    .badge-pending { background: #fff3e0; color: #e65100; }
+    .badge-approved { background: #e8f5e9; color: #2e7d32; }
+    .badge-rejected { background: #ffebee; color: #c62828; }
+    .badge-role { background: #e3f2fd; color: #1565c0; }
+
+    .actions button { padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer; font-family: 'Poppins'; font-size: 0.85rem; margin-left: 5px; }
+    .btn-approve { background: #e8f5e9; color: #2e7d32; }
+    .btn-reject { background: #ffebee; color: #c62828; }
+    .btn-role { background: #e3f2fd; color: #1565c0; }
+    
+    select.role-select { padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-family: 'Poppins'; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">IIT Palakkad Dashboard</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="admin-dashboard.html" class="active">Admin</a></li>
+    </ul>
+  </nav>
+
+  <div class="dashboard-container">
+    <div class="header-box">
+      <h1>Admin Dashboard</h1>
+    </div>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab('events')">Manage Events</button>
+      <button class="tab-btn" onclick="switchTab('users')">Manage Users</button>
+      <button class="tab-btn" onclick="switchTab('gc')">Manage GC</button>
+    </div>
+
+    <!-- Events Tab -->
+    <div id="eventsTab" class="tab-content active">
+      <div class="list-container" id="adminEventList">
+        <div style="padding: 30px; text-align: center; color: #888;">Loading events...</div>
+      </div>
+    </div>
+
+    <!-- Users Tab -->
+    <div id="usersTab" class="tab-content">
+      <div class="list-container" id="adminUserList">
+        <div style="padding: 30px; text-align: center; color: #888;">Loading users...</div>
+      </div>
+    </div>
+
+    <!-- GC Tab -->
+    <div id="gcTab" class="tab-content">
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <!-- Points Update -->
+        <div class="list-container" style="padding: 20px;">
+          <h3 style="margin-bottom: 15px; color: #a4893d;">Update Team Points</h3>
+          <div id="gcAlert" style="display:none; padding: 10px; margin-bottom: 10px; border-radius: 5px;"></div>
+          <div style="margin-bottom: 10px;">
+            <label style="display:block; font-size:0.9rem;">Team (House)</label>
+            <select id="gcTeam" class="role-select" style="width:100%; padding: 10px;">
+              <option value="Wild Wolves">Wild Wolves 🐺</option>
+              <option value="Mighty Lions">Mighty Lions 🦁</option>
+              <option value="Stalwart Rhinos">Stalwart Rhinos 🦏</option>
+              <option value="Majestic Eagles">Majestic Eagles 🦅</option>
+              <option value="Ferocious Tigers">Ferocious Tigers 🐅</option>
+              <option value="Stealthy Panthers">Stealthy Panthers 🐆</option>
+              <option value="Savage Sharks">Savage Sharks 🦈</option>
+            </select>
+          </div>
+          <div style="margin-bottom: 10px;">
+            <label style="display:block; font-size:0.9rem;">Sport</label>
+            <select id="gcSport" class="role-select" style="width:100%; padding: 10px;">
+              <option value="Athletics">Athletics 🏃</option>
+              <option value="Badminton (Men)">Badminton (Men) 🏸</option>
+              <option value="Badminton (Women)">Badminton (Women) 🏸</option>
+              <option value="Basketball (Men)">Basketball (Men) 🏀</option>
+              <option value="Basketball (Women)">Basketball (Women) 🏀</option>
+              <option value="Cricket">Cricket 🏏</option>
+              <option value="Football">Football ⚽</option>
+              <option value="Table Tennis (Men)">Table Tennis (Men) 🏓</option>
+              <option value="Table Tennis (Women)">Table Tennis (Women) 🏓</option>
+              <option value="Volleyball (Men)">Volleyball (Men) 🏐</option>
+              <option value="Volleyball (Women)">Volleyball (Women) 🏐</option>
+              <option value="Powerlifting">Powerlifting 🏋️</option>
+              <option value="Chess">Chess ♟️</option>
+              <option value="March Past">March Past 🥁</option>
+              <option value="Penalties">Penalties ⚠️</option>
+            </select>
+          </div>
+          <div style="margin-bottom: 15px;">
+            <label style="display:block; font-size:0.9rem;">Points Awarded</label>
+            <input type="number" id="gcPoints" style="width:100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px;" value="10">
+          </div>
+          <button class="btn-approve" style="width: 100%; padding: 12px; font-weight: 600;" onclick="updateGCPoints()">Update Leaderboard</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    requireRole('admin');
+    displayUserInfo();
+
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      event.target.classList.add('active');
+      document.getElementById(tabId + 'Tab').classList.add('active');
+      
+      if(tabId === 'events') loadAdminEvents();
+      if(tabId === 'users') loadAdminUsers();
+    }
+
+    async function loadAdminEvents() {
+      try {
+        const data = await apiRequest('/events/all');
+        const list = document.getElementById('adminEventList');
+        if (data.events.length === 0) {
+          list.innerHTML = '<div style="padding: 30px; text-align: center; color: #888;">No events found.</div>';
+          return;
+        }
+
+        list.innerHTML = data.events.map(ev => `
+          <div class="list-item">
+            <div class="info">
+              <h3>${ev.title} <span class="badge badge-${ev.status}">${ev.status}</span></h3>
+              <div class="meta">
+                <span>By: ${ev.organizer ? ev.organizer.fullName : 'Unknown'}</span>
+                <span>📅 ${new Date(ev.date).toLocaleDateString()}</span>
+              </div>
+            </div>
+            <div class="actions">
+              ${ev.status !== 'approved' ? `<button class="btn-approve" onclick="updateEventStatus('${ev._id}', 'approved')">Approve</button>` : ''}
+              ${ev.status !== 'rejected' ? `<button class="btn-reject" onclick="updateEventStatus('${ev._id}', 'rejected')">Reject</button>` : ''}
+              <button class="btn-reject" style="background:#ddd; color:#333;" onclick="deleteEvent('${ev._id}')">Delete</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        document.getElementById('adminEventList').innerHTML = `<p style="color:red; padding: 20px;">${err.message}</p>`;
+      }
+    }
+
+    async function updateEventStatus(eventId, status) {
+      if(!confirm(`Are you sure you want to ${status} this event?`)) return;
+      try {
+        await apiRequest(`/events/${eventId}/status`, 'PATCH', { status });
+        loadAdminEvents();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    async function deleteEvent(eventId) {
+      if(!confirm('Delete this event permanently?')) return;
+      try {
+        await apiRequest(`/events/${eventId}`, 'DELETE');
+        loadAdminEvents();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    async function loadAdminUsers() {
+      try {
+        const data = await apiRequest('/users');
+        const list = document.getElementById('adminUserList');
+        
+        list.innerHTML = data.users.map(u => `
+          <div class="list-item">
+            <div class="info">
+              <h3>${u.fullName} <span class="badge badge-role">${u.role}</span> ${u.isBlocked ? '<span class="badge badge-rejected">BLOCKED</span>' : ''}</h3>
+              <div class="meta">
+                <span>✉️ ${u.email}</span>
+                <span>Reg No: ${u.registerNumber || 'N/A'}</span>
+              </div>
+            </div>
+            <div class="actions">
+              <select class="role-select" id="role-${u._id}">
+                <option value="student" ${u.role === 'student' ? 'selected' : ''}>Student</option>
+                <option value="organizer" ${u.role === 'organizer' ? 'selected' : ''}>Organizer</option>
+                <option value="admin" ${u.role === 'admin' ? 'selected' : ''}>Admin</option>
+              </select>
+              <button class="btn-role" onclick="updateRole('${u._id}')">Update Role</button>
+              <button class="${u.isBlocked ? 'btn-approve' : 'btn-reject'}" onclick="toggleBlock('${u._id}', ${!u.isBlocked})">${u.isBlocked ? 'Unblock' : 'Block'}</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        document.getElementById('adminUserList').innerHTML = `<p style="color:red; padding: 20px;">${err.message}</p>`;
+      }
+    }
+
+    async function updateRole(userId) {
+      const role = document.getElementById(`role-${userId}`).value;
+      if(!confirm(`Change role to ${role}?`)) return;
+      try {
+        await apiRequest(`/users/${userId}/role`, 'PATCH', { role });
+        loadAdminUsers();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    async function toggleBlock(userId, isBlocked) {
+      if(!confirm(`Are you sure you want to ${isBlocked ? 'block' : 'unblock'} this user?`)) return;
+      try {
+        await apiRequest(`/users/${userId}/block`, 'PATCH', { isBlocked });
+        loadAdminUsers();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    // Initial load
+    loadAdminEvents();
+
+    let gcEventId = null;
+
+    async function loadGCEventId() {
+      try {
+        const res = await apiRequest('/gc');
+        gcEventId = res.event._id;
+      } catch (err) {
+        console.error('No GC event active.');
+      }
+    }
+
+    async function updateGCPoints() {
+      if (!gcEventId) await loadGCEventId();
+      if (!gcEventId) {
+        alert('No active General Championship event found.');
+        return;
+      }
+
+      const team = document.getElementById('gcTeam').value;
+      const sport = document.getElementById('gcSport').value;
+      const points = parseInt(document.getElementById('gcPoints').value);
+      
+      const alertBox = document.getElementById('gcAlert');
+
+      try {
+        await apiRequest(`/gc/points/${gcEventId}`, 'POST', { team, sport, points });
+        alertBox.style.display = 'block';
+        alertBox.style.background = '#e8f5e9';
+        alertBox.style.color = '#2e7d32';
+        alertBox.textContent = `Successfully updated ${team} to ${points} points for ${sport}!`;
+        setTimeout(() => alertBox.style.display = 'none', 3000);
+      } catch (err) {
+        alertBox.style.display = 'block';
+        alertBox.style.background = '#ffebee';
+        alertBox.style.color = '#c62828';
+        alertBox.textContent = err.message;
+      }
+    }
+  </script>
+</body>
+</html>

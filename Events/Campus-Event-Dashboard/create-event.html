@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Event | IIT Palakkad</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { background: #f9f9f9; font-family: 'Poppins', sans-serif; }
+    .container { max-width: 800px; margin: 40px auto; background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    h1 { color: #1a1a1a; margin-bottom: 30px; font-size: 2rem; }
+    .form-group { margin-bottom: 20px; }
+    label { display: block; margin-bottom: 8px; font-weight: 500; color: #333; }
+    input, select, textarea { width: 100%; padding: 12px; border: 2px solid #e8e8e8; border-radius: 10px; font-family: 'Poppins', sans-serif; transition: 0.3s; }
+    input:focus, select:focus, textarea:focus { border-color: #c7af6b; outline: none; box-shadow: 0 0 0 3px rgba(199,175,107,0.1); }
+    .row { display: flex; gap: 20px; }
+    .row .form-group { flex: 1; }
+    .btn-submit { background: linear-gradient(120deg, #ff3a22, #c7af6b); color: #fff; border: none; padding: 15px 30px; border-radius: 10px; font-size: 1.1rem; font-weight: 600; cursor: pointer; width: 100%; transition: 0.3s; }
+    .btn-submit:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(255,58,34,0.3); }
+    .alert { padding: 15px; border-radius: 8px; margin-bottom: 20px; display: none; }
+    .alert.success { background: #e8f5e9; color: #2e7d32; display: block; }
+    .alert.error { background: #ffebee; color: #c62828; display: block; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">IIT Palakkad Dashboard</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="organizer-dashboard.html">Dashboard</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <h1>Create New Event</h1>
+    <div id="message"></div>
+    <form id="createEventForm">
+      <div class="form-group">
+        <label>Event Title *</label>
+        <input type="text" id="title" required>
+      </div>
+      
+      <div class="form-group">
+        <label>Description *</label>
+        <textarea id="description" rows="4" required></textarea>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label>Category *</label>
+          <select id="category" required>
+            <option value="technical">Technical</option>
+            <option value="cultural">Cultural</option>
+            <option value="sports">Sports</option>
+            <option value="academic">Academic</option>
+            <option value="workshop">Workshop</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Date *</label>
+          <input type="date" id="date" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label>Time *</label>
+          <input type="time" id="time" required>
+        </div>
+        <div class="form-group">
+          <label>Venue *</label>
+          <input type="text" id="venue" required>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label>Registration Deadline *</label>
+          <input type="date" id="registrationDeadline" required>
+        </div>
+        <div class="form-group">
+          <label>Max Participants</label>
+          <input type="number" id="maxParticipants" value="100">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Agenda</label>
+        <textarea id="agenda" rows="3" placeholder="Optional"></textarea>
+      </div>
+
+      <div class="row">
+        <div class="form-group">
+          <label>Image URL</label>
+          <input type="url" id="image" placeholder="Optional">
+        </div>
+        <div class="form-group">
+          <label>Contact Email</label>
+          <input type="email" id="contact" placeholder="Optional">
+        </div>
+      </div>
+
+      <button type="submit" class="btn-submit" id="submitBtn">Submit Event for Approval</button>
+    </form>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    requireRole('organizer', 'admin');
+    displayUserInfo();
+
+    document.getElementById('createEventForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('submitBtn');
+      const msg = document.getElementById('message');
+      btn.disabled = true;
+      btn.textContent = 'Submitting...';
+
+      const payload = {
+        title: document.getElementById('title').value,
+        description: document.getElementById('description').value,
+        category: document.getElementById('category').value,
+        date: document.getElementById('date').value,
+        time: document.getElementById('time').value,
+        venue: document.getElementById('venue').value,
+        registrationDeadline: document.getElementById('registrationDeadline').value,
+        maxParticipants: parseInt(document.getElementById('maxParticipants').value),
+        agenda: document.getElementById('agenda').value,
+        image: document.getElementById('image').value,
+        contact: document.getElementById('contact').value
+      };
+
+      try {
+        await apiRequest('/events', 'POST', payload);
+        msg.className = 'alert success';
+        msg.textContent = 'Event submitted successfully! It is now pending admin approval.';
+        document.getElementById('createEventForm').reset();
+      } catch (err) {
+        msg.className = 'alert error';
+        msg.textContent = err.message;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Submit Event for Approval';
+      }
+    });
+  </script>
+</body>
+</html>

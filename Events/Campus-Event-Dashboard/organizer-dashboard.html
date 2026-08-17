@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Organizer Dashboard | IIT Palakkad</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { background: #f4f6f8; font-family: 'Poppins', sans-serif; }
+    .dashboard-container { max-width: 1200px; margin: 40px auto; padding: 0 20px; }
+    .header-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .header-box h1 { font-size: 2rem; color: #333; }
+    .btn-primary { background: linear-gradient(120deg, #ff3a22, #c7af6b); color: #fff; padding: 10px 20px; text-decoration: none; border-radius: 8px; font-weight: 600; box-shadow: 0 4px 10px rgba(255,58,34,0.2); }
+    
+    .event-list { background: #fff; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); overflow: hidden; }
+    .event-item { display: flex; justify-content: space-between; align-items: center; padding: 20px; border-bottom: 1px solid #eee; }
+    .event-item:last-child { border-bottom: none; }
+    .event-info h3 { margin: 0 0 5px 0; color: #222; }
+    .event-meta { font-size: 0.85rem; color: #666; display: flex; gap: 15px; }
+    .badge { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+    .badge-pending { background: #fff3e0; color: #e65100; }
+    .badge-approved { background: #e8f5e9; color: #2e7d32; }
+    .badge-rejected { background: #ffebee; color: #c62828; }
+    .actions button { padding: 8px 12px; border: none; border-radius: 6px; cursor: pointer; font-family: 'Poppins'; font-size: 0.85rem; margin-left: 5px; }
+    .btn-view { background: #e3f2fd; color: #1565c0; }
+    .btn-delete { background: #ffebee; color: #c62828; }
+
+    /* Modal for participants */
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); align-items: center; justify-content: center; z-index: 1000; }
+    .modal.open { display: flex; }
+    .modal-content { background: #fff; padding: 30px; border-radius: 12px; width: 90%; max-width: 600px; max-height: 80vh; overflow-y: auto; position: relative; }
+    .close-btn { position: absolute; right: 20px; top: 20px; cursor: pointer; font-size: 1.5rem; background: none; border: none; color: #666; }
+    .participant-row { padding: 10px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">IIT Palakkad Dashboard</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="events.html">Events</a></li>
+      <li><a href="organizer-dashboard.html" class="active">Dashboard</a></li>
+    </ul>
+  </nav>
+
+  <div class="dashboard-container">
+    <div class="header-box">
+      <h1>My Events</h1>
+      <a href="create-event.html" class="btn-primary">+ Create New Event</a>
+    </div>
+
+    <div class="event-list" id="eventList">
+      <div style="padding: 30px; text-align: center; color: #888;">Loading events...</div>
+    </div>
+  </div>
+
+  <!-- Participants Modal -->
+  <div class="modal" id="partModal">
+    <div class="modal-content">
+      <button class="close-btn" onclick="document.getElementById('partModal').classList.remove('open')">&times;</button>
+      <h2 style="margin-bottom: 20px;">Participants</h2>
+      <div id="partList">Loading...</div>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    requireRole('organizer', 'admin');
+    displayUserInfo();
+
+    async function loadMyEvents() {
+      try {
+        const data = await apiRequest('/events/my');
+        const list = document.getElementById('eventList');
+        if (data.events.length === 0) {
+          list.innerHTML = '<div style="padding: 30px; text-align: center; color: #888;">You have not created any events yet.</div>';
+          return;
+        }
+
+        list.innerHTML = data.events.map(ev => `
+          <div class="event-item">
+            <div class="event-info">
+              <h3>${ev.title} <span class="badge badge-${ev.status}">${ev.status}</span></h3>
+              <div class="event-meta">
+                <span>📅 ${new Date(ev.date).toLocaleDateString()}</span>
+                <span>👥 ${ev.participants.length} Participants</span>
+              </div>
+            </div>
+            <div class="actions">
+              <button class="btn-view" onclick="viewParticipants('${ev._id}')">Participants</button>
+              <button class="btn-delete" onclick="deleteEvent('${ev._id}')">Delete</button>
+            </div>
+          </div>
+        `).join('');
+      } catch (err) {
+        document.getElementById('eventList').innerHTML = `<div style="padding: 30px; color: red;">Error: ${err.message}</div>`;
+      }
+    }
+
+    async function viewParticipants(eventId) {
+      document.getElementById('partModal').classList.add('open');
+      const list = document.getElementById('partList');
+      list.innerHTML = 'Loading...';
+      try {
+        const data = await apiRequest(`/registrations/event/${eventId}`);
+        if (data.registrations.length === 0) {
+          list.innerHTML = '<p>No participants registered yet.</p>';
+          return;
+        }
+
+        // Check if this is a GC event (multi-sport)
+        // If the first registration has sportName, group them.
+        const hasSports = data.registrations.some(r => r.sportName);
+
+        if (hasSports) {
+          const grouped = {};
+          data.registrations.forEach(r => {
+            const sport = r.sportName || 'Other';
+            if (!grouped[sport]) grouped[sport] = [];
+            grouped[sport].push(r);
+          });
+
+          let html = '';
+          for (const [sport, regs] of Object.entries(grouped)) {
+            html += `<h3 style="margin-top: 20px; color: #a4893d; border-bottom: 2px solid #f0f0f0; padding-bottom: 5px;">${sport} (${regs.length})</h3>`;
+            html += regs.map(r => `
+              <div class="participant-row">
+                <div>
+                  <strong>${r.user.fullName}</strong> ${r.user.team && r.user.team !== 'None' ? `<span class="badge badge-pending">${r.user.team}</span>` : ''}<br>
+                  <small style="color:#666">${r.user.email}</small>
+                </div>
+                <div style="color:#888; font-size: 0.9rem;">${r.user.registerNumber || 'N/A'}</div>
+              </div>
+            `).join('');
+          }
+          list.innerHTML = html;
+        } else {
+          list.innerHTML = data.registrations.map(r => `
+            <div class="participant-row">
+              <div>
+                <strong>${r.user.fullName}</strong> ${r.user.team && r.user.team !== 'None' ? `<span class="badge badge-pending">${r.user.team}</span>` : ''}<br>
+                <small style="color:#666">${r.user.email}</small>
+              </div>
+              <div style="color:#888; font-size: 0.9rem;">${r.user.registerNumber || 'N/A'}</div>
+            </div>
+          `).join('');
+        }
+      } catch (err) {
+        list.innerHTML = `<p style="color:red">${err.message}</p>`;
+      }
+    }
+
+    async function deleteEvent(eventId) {
+      if (!confirm('Are you sure you want to delete this event?')) return;
+      try {
+        await apiRequest(`/events/${eventId}`, 'DELETE');
+        loadMyEvents();
+      } catch (err) {
+        alert(err.message);
+      }
+    }
+
+    loadMyEvents();
+  </script>
+</body>
+</html>

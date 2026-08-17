@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile | IIT Palakkad</title>
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    body { background: #f4f6f8; font-family: 'Poppins', sans-serif; }
+    .container { max-width: 900px; margin: 40px auto; padding: 0 20px; display: grid; grid-template-columns: 1fr 2fr; gap: 30px; }
+    
+    .profile-card { background: #fff; padding: 30px; border-radius: 16px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .avatar { width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(120deg, #ff3a22, #c7af6b); color: #fff; font-size: 3rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; }
+    .profile-card h2 { margin: 0 0 5px; color: #222; }
+    .role-badge { display: inline-block; padding: 5px 12px; background: #e3f2fd; color: #1565c0; border-radius: 20px; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; margin-bottom: 15px; }
+    .email { color: #666; font-size: 0.9rem; margin-bottom: 20px; }
+    
+    .details-card { background: #fff; padding: 30px; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+    .details-card h3 { color: #a4893d; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #f0f0f0; }
+    
+    .form-group { margin-bottom: 15px; }
+    .form-group label { display: block; margin-bottom: 5px; color: #555; font-size: 0.9rem; font-weight: 500; }
+    .form-group input, .form-group textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 8px; font-family: 'Poppins'; }
+    
+    .btn-save { background: linear-gradient(120deg, #ff3a22, #c7af6b); color: #fff; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-family: 'Poppins'; font-weight: 600; }
+    
+    .regs-list { margin-top: 30px; }
+    .reg-item { padding: 15px; border: 1px solid #eee; border-radius: 8px; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    .reg-item h4 { margin: 0 0 5px; color: #333; }
+    .reg-item p { margin: 0; font-size: 0.85rem; color: #666; }
+    
+    @media (max-width: 768px) { .container { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <nav class="navbar">
+    <div class="logo">IIT Palakkad Dashboard</div>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="gc.html">GC 2026</a></li>
+      <li><a href="events.html">Events</a></li>
+    </ul>
+  </nav>
+
+  <div class="container">
+    <!-- Left Column: Profile Overview -->
+    <div class="profile-card">
+      <div class="avatar" id="profileAvatar">U</div>
+      <h2 id="profileName">Loading...</h2>
+      <div class="role-badge" id="profileRole">Student</div>
+      <div class="email" id="profileEmail"></div>
+      
+      <!-- Special Links based on role -->
+      <div id="adminLink" style="display:none; margin-top: 20px;">
+        <a href="admin-dashboard.html" style="color: #ff3a22; font-weight: 600; text-decoration: none;">Go to Admin Dashboard →</a>
+      </div>
+      <div id="orgLink" style="display:none; margin-top: 20px;">
+        <a href="organizer-dashboard.html" style="color: #c7af6b; font-weight: 600; text-decoration: none;">Go to Organizer Dashboard →</a>
+      </div>
+    </div>
+
+    <!-- Right Column: Details & Edit -->
+    <div class="details-card">
+      <h3>Edit Profile</h3>
+      <div id="msg" style="margin-bottom: 15px; padding: 10px; border-radius: 5px; display:none;"></div>
+      
+      <form id="profileForm">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="editName" required>
+        </div>
+        <div class="form-group">
+          <label>Register Number</label>
+          <input type="text" id="editRegNo">
+        </div>
+        <div class="form-group">
+          <label>Bio</label>
+          <textarea id="editBio" rows="3" placeholder="Tell us about yourself..."></textarea>
+        </div>
+        <button type="submit" class="btn-save" id="saveBtn">Save Changes</button>
+      </form>
+
+      <div class="regs-list">
+        <h3>My Registered Events</h3>
+        <div id="myEventsList">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <script src="auth.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+      displayUserInfo();
+      
+      // Load user profile from API
+      try {
+        const user = await refreshCurrentUser();
+        
+        // Populate UI
+        document.getElementById('profileName').textContent = user.fullName;
+        document.getElementById('profileEmail').textContent = user.email;
+        document.getElementById('profileRole').textContent = user.role;
+        document.getElementById('profileAvatar').textContent = user.fullName.substring(0, 2).toUpperCase();
+        
+        document.getElementById('editName').value = user.fullName;
+        document.getElementById('editRegNo').value = user.registerNumber || '';
+        document.getElementById('editBio').value = user.bio || '';
+
+        // Dashboard Links
+        if(user.role === 'admin') document.getElementById('adminLink').style.display = 'block';
+        if(user.role === 'organizer' || user.role === 'admin') document.getElementById('orgLink').style.display = 'block';
+
+        // Load Registrations
+        loadRegistrations();
+      } catch (err) {
+        console.error(err);
+      }
+    });
+
+    // Handle Profile Update
+    document.getElementById('profileForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const btn = document.getElementById('saveBtn');
+      const msg = document.getElementById('msg');
+      btn.disabled = true;
+      btn.textContent = 'Saving...';
+
+      const user = getCurrentUser();
+      try {
+        const data = await apiRequest(`/users/${user.id}`, 'PUT', {
+          fullName: document.getElementById('editName').value,
+          registerNumber: document.getElementById('editRegNo').value,
+          bio: document.getElementById('editBio').value
+        });
+        
+        // Update local state
+        const updatedUser = { ...user, ...data.user };
+        setCurrentUser(updatedUser);
+        displayUserInfo();
+        
+        document.getElementById('profileName').textContent = updatedUser.fullName;
+        
+        msg.style.display = 'block';
+        msg.style.background = '#e8f5e9';
+        msg.style.color = '#2e7d32';
+        msg.textContent = 'Profile updated successfully!';
+      } catch (err) {
+        msg.style.display = 'block';
+        msg.style.background = '#ffebee';
+        msg.style.color = '#c62828';
+        msg.textContent = err.message;
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Save Changes';
+        setTimeout(() => msg.style.display = 'none', 3000);
+      }
+    });
+
+    async function loadRegistrations() {
+      const list = document.getElementById('myEventsList');
+      try {
+        const data = await apiRequest('/registrations/my');
+        if(data.registrations.length === 0) {
+          list.innerHTML = '<p style="color:#888;">You have not registered for any events yet.</p>';
+          return;
+        }
+
+        list.innerHTML = data.registrations.map(r => {
+          if(!r.event) return '';
+          
+          let actionBtn = '';
+          if (r.event.eventType === 'multi-sport') {
+            actionBtn = `<a href="http://localhost:5001/api/gc/certificate/${r._id}?token=${getToken()}" target="_blank" style="display:inline-block; margin-top:10px; padding:6px 12px; background:#1565c0; color:#fff; text-decoration:none; border-radius:6px; font-size:0.8rem;">📄 Download Certificate</a>`;
+          }
+
+          return `
+            <div class="reg-item">
+              <div>
+                <h4>${r.sportName ? `${r.sportName} (${r.event.title})` : r.event.title}</h4>
+                <p>📅 ${new Date(r.event.date).toLocaleDateString()} &nbsp; 📍 ${r.event.venue}</p>
+                ${actionBtn}
+              </div>
+              <span style="color:#2e7d32; font-size:0.85rem; font-weight:600;">✓ Registered</span>
+            </div>
+          `;
+        }).join('');
+      } catch(err) {
+        list.innerHTML = `<p style="color:red;">Error loading registrations.</p>`;
+      }
+    }
+  </script>
+</body>
+</html>
